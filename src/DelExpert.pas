@@ -1,5 +1,6 @@
 unit DelExpert;
-
+
+
 {$I DelForEx.inc}
 
 interface
@@ -100,7 +101,7 @@ function ShowErrMsgBox(const S: string): Integer;
 begin
   if Assigned(ProgressDlg) then
     ProgressDlg.Hide;
-  Result := Application.MessageBox(PChar(S), '´íÎó', MB_ICONHAND);
+  Result := Application.MessageBox(PChar(S), 'ï¿½ï¿½ï¿½ï¿½', MB_ICONHAND);
 end;
 
 function FormatFile(Param: Pointer; const FileName, UnitName, FormName: string)
@@ -144,7 +145,7 @@ begin
                 end;
               except
                 on E: EInOutError do
-                  ShowErrMsgBox('I/O ´íÎó [' + E.Message + '] , "' +
+                  ShowErrMsgBox('I/O ï¿½ï¿½ï¿½ï¿½ [' + E.Message + '] , "' +
                     FileName + '"');
               end;
             finally
@@ -154,7 +155,7 @@ begin
         end;
       end
       else
-        ShowErrMsgBox('Ã»ÕÒµ½ "' + FileName + '" ÎÄ¼þ¡£');
+        ShowErrMsgBox('Ã»ï¿½Òµï¿½ "' + FileName + '" ï¿½Ä¼ï¿½ï¿½ï¿½');
     end;
   end;
 end;
@@ -250,7 +251,7 @@ begin
           IDEStream.WriteText(Formatter.Text);
       end
       else
-        ShowErrMsgBox(ExtractFileName(IDEStream.FileName) + ': ÎÄ¼þÖ»¶Á»òÎ´±£´æ£¡');
+        ShowErrMsgBox(ExtractFileName(IDEStream.FileName) + ': ï¿½Ä¼ï¿½Ö»ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½æ£¡');
     finally
       Formatter.Clear;
       IDEStream.Free;
@@ -609,4 +610,4 @@ end;
 {$ENDIF}
 
 end.
-
+

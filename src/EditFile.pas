@@ -241,11 +241,11 @@ var
 begin
   case ModalResult of
     mrCancel:
-      if IsChanged and (MessageBox(Handle, '¹Ø±Õ¶ø²»±£´æ¸Ä±äÂğ£¿', '×Ô¶¨Òå', MB_ICONQUESTION or MB_YESNO or MB_DEFBUTTON2) = ID_No) then
+      if IsChanged and (MessageBox(Handle, 'å…³é—­è€Œä¸ä¿å­˜æ”¹å˜å—ï¼Ÿ', 'è‡ªå®šä¹‰', MB_ICONQUESTION or MB_YESNO or MB_DEFBUTTON2) = ID_No) then
         Action := caNone;
     mrOk:
       begin
-        if IsChanged and (MessageBox(Handle, 'È·ÈÏ±£´æÉèÖÃÂğ£¿', '×Ô¶¨Òå', MB_ICONQUESTION or MB_YESNO) = ID_YES) then
+        if IsChanged and (MessageBox(Handle, 'ç¡®è®¤ä¿å­˜è®¾ç½®å—ï¼Ÿ', 'è‡ªå®šä¹‰', MB_ICONQUESTION or MB_YESNO) = ID_YES) then
         begin
           AssignFile(TheFile, FileNameLabel.Caption);
           Rewrite(TheFile);
@@ -331,4 +331,3 @@ begin
 end;
 
 end.
-

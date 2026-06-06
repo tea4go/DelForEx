@@ -134,10 +134,10 @@ uses Menus, EditFile, Messages;
 {$R *.DFM}
 
 const
-  str_None = 'Ã»ÓĞ';
-  str_Before = 'Ö®Ç°';
-  str_after = 'Ö®ºó';
-  str_BeforeAfter = 'Ç°ºó¶¼¼Ó';
+  str_None = 'æ²¡æœ‰';
+  str_Before = 'ä¹‹å‰';
+  str_after = 'ä¹‹å';
+  str_BeforeAfter = 'å‰åéƒ½åŠ ';
 
 function StrTrim(Dest: PAnsiChar): PAnsiChar;
 var
@@ -306,18 +306,18 @@ begin
       with SpaceGrid do
       begin
         RowCount := 10;
-        Cells[0, 0] := 'ÃèÊö';
-        Cells[1, 0] := '²Ù×÷·û';
-        Cells[2, 0] := '¿Õ¸ñ';
-        AddSpaceRow(1, '¸³Öµ·û', ':=', SpaceEqualOper);
-        AddSpaceRow(2, 'ÔËËã·û', '< > = + - / * etc.', SpaceOperators);
-        AddSpaceRow(3, 'Ã°ºÅ', ':', SpaceColon);
-        AddSpaceRow(4, '·ÖºÅ', ';', SpaceSemiColon);
-        AddSpaceRow(5, '¶¹ºÅ', ',', SpaceComma);
-        AddSpaceRow(6, '×óÀ¨ºÅ', '(', SpaceLeftBr);
-        AddSpaceRow(7, 'ÓÒÀ¨ºÅ', ')', SpaceRightBr);
-        AddSpaceRow(8, '×óÖĞÀ¨ºÅ', '[', SpaceLeftHook);
-        AddSpaceRow(9, 'ÓÒÖĞÀ¨ºÅ', ']', SpaceRightHook);
+        Cells[0, 0] := 'æè¿°';
+        Cells[1, 0] := 'æ“ä½œç¬¦';
+        Cells[2, 0] := 'ç©ºæ ¼';
+        AddSpaceRow(1, 'èµ‹å€¼ç¬¦', ':=', SpaceEqualOper);
+        AddSpaceRow(2, 'è¿ç®—ç¬¦', '< > = + - / * etc.', SpaceOperators);
+        AddSpaceRow(3, 'å†’å·', ':', SpaceColon);
+        AddSpaceRow(4, 'åˆ†å·', ';', SpaceSemiColon);
+        AddSpaceRow(5, 'è±†å·', ',', SpaceComma);
+        AddSpaceRow(6, 'å·¦æ‹¬å·', '(', SpaceLeftBr);
+        AddSpaceRow(7, 'å³æ‹¬å·', ')', SpaceRightBr);
+        AddSpaceRow(8, 'å·¦ä¸­æ‹¬å·', '[', SpaceLeftHook);
+        AddSpaceRow(9, 'å³ä¸­æ‹¬å·', ']', SpaceRightHook);
       end;
       FeedAfterSemiColonCheck.Checked := FeedAfterSemiColon;
       FeedEachUnitCheck.Checked := FeedEachUnit;
@@ -569,4 +569,3 @@ begin
 end;
 
 end.
-
