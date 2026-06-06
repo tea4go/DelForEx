@@ -1,4 +1,4 @@
-unit OptDlg;
+﻿unit OptDlg;
 
 interface
 
@@ -305,6 +305,7 @@ begin
       RemoveDoubleBlankCheck.Checked := RemoveDoubleBlank;
       with SpaceGrid do
       begin
+        DefaultRowHeight:=32;
         RowCount := 10;
         Cells[0, 0] := '描述';
         Cells[1, 0] := '操作符';

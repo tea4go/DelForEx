@@ -1,4 +1,4 @@
-unit EditFile;
+﻿unit EditFile;
 
 interface
 

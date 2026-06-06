@@ -1,4 +1,4 @@
-unit DelForInterf;
+﻿unit DelForInterf;
 
 interface
 uses Classes, DelForTypes;

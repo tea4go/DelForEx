@@ -1,4 +1,4 @@
-unit Delfor1;
+﻿unit Delfor1;
 
 interface
 
@@ -173,7 +173,7 @@ end;
 procedure TPascalParser.Activate;
 begin
   LoadDll(RootDir);
-  if not IsLoadDLL then Exception.Create('���� ' + DelForDll + ' ʧ�ܡ�');
+  if not IsLoadDLL then Exception.Create('加载 ' + DelForDll + ' 失败。');
 end;
 
 procedure TPascalParser.Deactivate;
@@ -322,7 +322,7 @@ procedure TPascalParser.Clear;
 begin
   if @Formatter_Version = nil then Exit;
   if CurrentDllVersion <> Formatter_Version then
-    Exception.Create('δ֪ DELFORDLL �汾');
+    Exception.Create('未知 DELFORDLL 版本');
   Formatter_clear;
 end;
 

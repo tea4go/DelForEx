@@ -1,4 +1,4 @@
-unit DelforEngine;
+﻿unit DelforEngine;
 interface
 uses SysUtils, OObjects, Classes, DelForTypes;
 

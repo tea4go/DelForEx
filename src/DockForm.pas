@@ -1,4 +1,4 @@
-unit DockForm;
+﻿unit DockForm;
 
 interface
 

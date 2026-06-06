@@ -1,4 +1,4 @@
-unit DelForCommon;
+ï»¿unit DelForCommon;
 
 {$I DelForEx.inc}
 
@@ -11,26 +11,26 @@ uses
 function GetModuleName(Module: HMODULE): string;
 {$ENDIF}
 
-//ÎÄ¼şÊÇ·ñÖ»¶Á
+//æ–‡ä»¶æ˜¯å¦åªè¯»
 function IsReadonlyFile(const FileName: string): Boolean;
 
-//ÔÚÖ¸¶¨Î»ÖÃ²åÈë×Ö·û
+//åœ¨æŒ‡å®šä½ç½®æ’å…¥å­—ç¬¦
 function StrInsert(Str1, Str2: PAnsiChar; I: Integer): PAnsiChar;
 
-//±¸·İÎÄ¼ş
+//å¤‡ä»½æ–‡ä»¶
 function MakeBakFile(Dest, FileName: PAnsiChar): Boolean;
 
 {$IFDEF DELPHI9_UP}
-// ÎÄ¼şÊ±¼ä×ª±¾µØÊ±¼ä
+// æ–‡ä»¶æ—¶é—´è½¬æœ¬åœ°æ—¶é—´
 function FileTimeToLocalSystemTime(FTime: TFileTime): TSystemTime;
 
-// ÎÄ¼şÊ±¼ä×ª±¾µØÈÕÆÚÊ±¼ä
+// æ–‡ä»¶æ—¶é—´è½¬æœ¬åœ°æ—¥æœŸæ—¶é—´
 function FileTimeToDateTime(const FileTime: TFileTime): TDateTime;
 
-// È¡ÎÄ¼ş³¤¶È
+// å–æ–‡ä»¶é•¿åº¦
 function GetFileSize(const FileName: string): Int64;
 
-// È¡ÎÄ¼şDelphi¸ñÊ½ÈÕÆÚÊ±¼ä
+// å–æ–‡ä»¶Delphiæ ¼å¼æ—¥æœŸæ—¶é—´
 function GetFileDateTime(const FileName: string): TDateTime;
 {$ENDIF}
 implementation
@@ -45,7 +45,7 @@ begin
 end;
 {$ENDIF}
 
-//ÎÄ¼şÊÇ·ñÖ»¶Á
+//æ–‡ä»¶æ˜¯å¦åªè¯»
 
 function IsReadonlyFile(const FileName: string): Boolean;
 var
@@ -55,7 +55,7 @@ begin
   Result := ((Attributes and faReadOnly) > 0);
 end;
 
-//ÔÚÖ¸¶¨Î»ÖÃ²åÈë×Ö·û
+//åœ¨æŒ‡å®šä½ç½®æ’å…¥å­—ç¬¦
 
 function StrInsert(Str1, Str2: PAnsiChar; I: Integer): PAnsiChar;
 var
@@ -68,7 +68,7 @@ begin
   StrInsert := Str1;
 end;
 
-//±¸·İÎÄ¼ş
+//å¤‡ä»½æ–‡ä»¶
 
 function MakeBakFile(Dest, FileName: PAnsiChar): Boolean;
 var
@@ -99,7 +99,7 @@ begin
 end;
 
 {$IFDEF DELPHI9_UP}
-// ÎÄ¼şÊ±¼ä×ª±¾µØÊ±¼ä
+// æ–‡ä»¶æ—¶é—´è½¬æœ¬åœ°æ—¶é—´
 
 function FileTimeToLocalSystemTime(FTime: TFileTime): TSystemTime;
 var
@@ -110,7 +110,7 @@ begin
   Result := STime;
 end;
 
-// ÎÄ¼şÊ±¼ä×ª±¾µØÈÕÆÚÊ±¼ä
+// æ–‡ä»¶æ—¶é—´è½¬æœ¬åœ°æ—¥æœŸæ—¶é—´
 
 function FileTimeToDateTime(const FileTime: TFileTime): TDateTime;
 var
@@ -122,7 +122,7 @@ begin
       wSecond, wMilliseconds);
 end;
 
-// È¡ÎÄ¼şĞÅÏ¢
+// å–æ–‡ä»¶ä¿¡æ¯
 
 function GetFileInfo(const FileName: string; var FileSize: Int64;
   var FileTime: TDateTime): Boolean;
@@ -145,7 +145,7 @@ begin
   end;
 end;
 
-// È¡ÎÄ¼ş³¤¶È
+// å–æ–‡ä»¶é•¿åº¦
 
 function GetFileSize(const FileName: string): Int64;
 var
@@ -155,7 +155,7 @@ begin
   GetFileInfo(FileName, Result, FileTime);
 end;
 
-// È¡ÎÄ¼şDelphi¸ñÊ½ÈÕÆÚÊ±¼ä
+// å–æ–‡ä»¶Delphiæ ¼å¼æ—¥æœŸæ—¶é—´
 
 function GetFileDateTime(const FileName: string): TDateTime;
 var

@@ -1,4 +1,4 @@
-unit MyIDEStream;
+ï»¿unit MyIDEStream;
 
 {$I DelForEx.inc}
 
@@ -165,7 +165,7 @@ begin
     else
     begin
       if Assigned(ProgressDlg) then ProgressDlg.Hide;
-      raise Exception.Create('¶Ô²»Æğ, Ö»¶Ô PAS »ò DPR ÎÄ¼şÓĞĞ§¡£');
+      raise Exception.Create('å¯¹ä¸èµ·, åªå¯¹ PAS æˆ– DPR æ–‡ä»¶æœ‰æ•ˆã€‚');
     end;
     FLines := TStringList.Create;
 end;

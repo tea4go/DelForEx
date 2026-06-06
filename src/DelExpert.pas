@@ -1,4 +1,4 @@
-unit DelExpert;
+﻿unit DelExpert;
 
 
 {$I DelForEx.inc}

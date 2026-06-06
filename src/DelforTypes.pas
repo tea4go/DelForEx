@@ -1,4 +1,4 @@
-unit DelForTypes;
+﻿unit DelForTypes;
 
 interface
 
