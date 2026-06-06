@@ -1,4 +1,4 @@
-unit DelForExpert;
+ï»¿unit DelForExpert;
 
 {$I DelForEx.inc}
 
@@ -146,12 +146,12 @@ end;
 
 function TIDETextExpert.GetMenuText: string;
 begin
-  Result := 'Ô´Âë¸ñÊ½»¯(&S)...';
+  Result := 'æºç æ ¼å¼åŒ–(&S)...';
 end;
 
 function TIDETextExpert.GetComment: string;
 begin
-  Result := 'Delphi Ô´Âë¸ñÊ½»¯¹¤¾ß';
+  Result := 'Delphi æºç æ ¼å¼åŒ–å·¥å…·';
 end;
 
 function TIDETextExpert.GetPage: string;
@@ -210,12 +210,12 @@ begin
   if Assigned(Menu) then
   begin
     MenuItem := TMenuItem.Create(Menu);
-    MenuItem.Caption := 'Ô´Âë¸ñÊ½»¯(&S)...';
+    MenuItem.Caption := 'æºç æ ¼å¼åŒ–(&S)...';
     MenuItem.OnClick := OnMenuItemClick;
     MenuItem.ShortCut := ShortCut(Word('D'), [ssCtrl,ssShift]);
 
     MenuItem1 := TMenuItem.Create(Menu);
-    MenuItem1.Caption := '¸ñÊ½»¯µ±Ç°ÎÄ¼ş(&F)...';
+    MenuItem1.Caption := 'æ ¼å¼åŒ–å½“å‰æ–‡ä»¶(&F)...';
     MenuItem1.OnClick := OnMenuItem1Click;
     MenuItem1.ShortCut := ShortCut(Word('D'), [ssCtrl]);
 
@@ -381,7 +381,7 @@ const
 var
   FWizardIndex: Integer = InvalidIndex;
 
-  // ×¨¼ÒDLLÊÍ·Å¹ı³Ì
+  // ä¸“å®¶DLLé‡Šæ”¾è¿‡ç¨‹
 
 procedure FinalizeWizard;
 var
@@ -397,7 +397,7 @@ begin
   end;
 end;
 
-// ×¨¼ÒDLL³õÊ¼»¯Èë¿Úº¯Êı
+// ä¸“å®¶DLLåˆå§‹åŒ–å…¥å£å‡½æ•°
 
 function InitWizard(const BorlandIDEServices: IBorlandIDEServices;
   RegisterProc: TWizardRegisterProc;
