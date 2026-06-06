@@ -174,3 +174,24 @@
   {$DEFINE Delphi17_UP}
   {$LIBSUFFIX '17'}
 {$ENDIF}
+
+// XE4 (CompilerVersion 25.0) 及以后所有版本：ToolsAPI 模型与 Delphi9_UP 一致。
+// 用 CompilerVersion 统一处理（含 RAD Studio 13.1 = 37.0），避免逐版本维护 VERxxx 宏。
+{$IF CompilerVersion >= 25.0}
+  {$DEFINE Delphi2_UP}
+  {$DEFINE Delphi3_UP}
+  {$DEFINE Delphi4_UP}
+  {$DEFINE Delphi5_UP}
+  {$DEFINE Delphi6_UP}
+  {$DEFINE Delphi7_UP}
+  {$DEFINE Delphi9_UP}
+  {$DEFINE Delphi10_UP}
+  {$DEFINE Delphi11_UP}
+  {$DEFINE Delphi12_UP}
+  {$DEFINE Delphi14_UP}
+  {$DEFINE Delphi15_UP}
+  {$DEFINE Delphi16_UP}
+  {$DEFINE Delphi17_UP}
+  // 包后缀使用 IDE 当前 RTL 版本号（如 RAD Studio 13.1 为 370）
+  {$LIBSUFFIX AUTO}
+{$IFEND}
