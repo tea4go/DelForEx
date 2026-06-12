@@ -6,6 +6,10 @@ uses
   SysUtils, Classes, ExtCtrls, Menus, DelForTypes, DelforEng;
 
 type
+  // 内置代码风格预设标识,供 UI 调用 SetXxx 用
+  TFormatStyle = (fsDefault, fsBorland, fsRADStudio, fsObjectPascal,
+    fsKAndR, fsJclJvcl);
+
   TPascalParser = class(TObject)
   private
     Timer: TTimer;
@@ -37,6 +41,10 @@ type
     procedure Clear;
     procedure SetDefault;
     procedure SetBorland;
+    procedure SetRADStudio;
+    procedure SetObjectPascal;
+    procedure SetKAndR;
+    procedure SetJclJvcl;
     procedure LoadFromFile(AFileName: PAnsiChar);
     procedure LoadFromList(AList: TStringList);
     function Parse: Boolean;
@@ -245,6 +253,94 @@ begin
   FeedRoundBegin := NewLine;
   FeedAfterSemiColon := True;
   RemoveDoubleBlank := True;
+end;
+
+// RAD Studio 官方 Code Formatter 默认输出风格的参数。
+// 80 列限制、关键字小写、begin 独占一行、不强制 then 后换行。
+procedure TPascalParser.SetRADStudio;
+begin
+  SetDefault;
+  WrapLines := True;
+  WrapPosition := 400;
+  SpacePerIndent := 2;
+  SpaceColon := spAfter;
+  SpaceComma := spAfter;
+  SpaceEqualOper := spBoth;
+  SpaceOperators := spBoth;
+  ReservedCase := rfLowerCase;
+  StandDirectivesCase := rfLowerCase;
+  FeedRoundBegin := NewLine;
+  FeedBeforeEnd := True;
+  indentBegin := False;
+  IndentComments := True;
+  FeedAfterThen := False;
+  RemoveDoubleBlank := False;
+  BlankProc := True;
+end;
+
+// Object Pascal Style Guide (Charlie Calvert)
+// 2 空格缩进、begin 独占、then/var 后换行、过程间空行
+procedure TPascalParser.SetObjectPascal;
+begin
+  SetDefault;
+  SpacePerIndent := 2;
+  WrapLines := True;
+  WrapPosition := 400;
+  ReservedCase := rfLowerCase;
+  StandDirectivesCase := rfLowerCase;
+  FeedRoundBegin := NewLine;
+  indentBegin := False;
+  FeedBeforeEnd := True;
+  FeedAfterThen := True;
+  ExceptSingle := True;
+  FeedAfterVar := True;
+  FeedAfterSemiColon := True;
+  BlankProc := True;
+  RemoveDoubleBlank := True;
+  AlignVar := True;
+  AlignVarPos := 20;
+  IndentComments := True;
+end;
+
+// K&R 紧凑型:begin 跟随控制语句、不强制 then 后换行、函数间不空行
+procedure TPascalParser.SetKAndR;
+begin
+  SetDefault;
+  SpacePerIndent := 2;
+  WrapLines := False;
+  ReservedCase := rfLowerCase;
+  FeedRoundBegin := UnChanged;
+  indentBegin := False;
+  FeedAfterThen := False;
+  ExceptSingle := True;
+  FeedBeforeEnd := True;
+  RemoveDoubleBlank := True;
+  BlankProc := False;
+  FeedAfterSemiColon := False;
+end;
+
+// JCL/JVCL 社区风格:100 列、注释列对齐、函数前注释模板、严格清理空行
+procedure TPascalParser.SetJclJvcl;
+begin
+  SetDefault;
+  SpacePerIndent := 2;
+  WrapLines := True;
+  WrapPosition := 400;
+  ReservedCase := rfLowerCase;
+  StandDirectivesCase := rfLowerCase;
+  FeedRoundBegin := NewLine;
+  indentBegin := False;
+  FeedAfterThen := True;
+  ExceptSingle := False;
+  FeedBeforeEnd := True;
+  FeedAfterVar := True;
+  FeedAfterSemiColon := True;
+  RemoveDoubleBlank := True;
+  BlankProc := True;
+  IndentComments := True;
+  AlignComments := True;
+  AlignCommentPos := 40;
+  CommentFunction := True;
 end;
 
 function TPascalParser.GetNewCapFileTime: Integer;
@@ -519,4 +615,3 @@ begin
 end;
 
 end.
-

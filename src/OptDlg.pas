@@ -118,6 +118,9 @@ type
       Space: TSpaceBefore);
     function GetSpaceItem(I: Integer): TSpaceBefore;
     procedure SetDefault(BorlandStyle: Boolean);
+    // 动态创建预设风格按钮(RAD/OPSG/K&R/JCL),Tag 标识风格类型
+    procedure EnsureStyleButtonsCreated;
+    procedure StyleButtonClick(Sender: TObject);
   public
     HelpFile: string;
     Formatter: TPascalParser;
@@ -549,6 +552,7 @@ end;
 
 procedure TOptionsDlg.FormShow(Sender: TObject);
 begin
+  EnsureStyleButtonsCreated;
   FillSpaceCombo(SpacingCombo);
   UpdateButtons;
   FillPreview;
@@ -561,6 +565,55 @@ end;
 procedure TOptionsDlg.BorlandButtonClick(Sender: TObject);
 begin
   SetDefault(True);
+end;
+
+// 在 BorlandButton 右侧依次创建 4 个预设风格按钮,幂等(只创建一次)
+procedure TOptionsDlg.EnsureStyleButtonsCreated;
+
+  function CreateStyleBtn(const ACaption: string; ATag: Integer;
+    APrev: TButton): TButton;
+  begin
+    Result := TButton.Create(Self);
+    Result.Parent := BorlandButton.Parent;
+    Result.SetBounds(APrev.Left + APrev.Width + 6, APrev.Top,
+      APrev.Width, APrev.Height);
+    Result.Caption := ACaption;
+    Result.Tag := ATag;
+    Result.OnClick := StyleButtonClick;
+  end;
+
+var
+  Prev: TButton;
+begin
+  // 用 BorlandButton.Tag 充当 "已创建" 标志(原始为 0)
+  if BorlandButton.Tag <> 0 then Exit;
+  BorlandButton.Tag := 1;
+
+  Prev := BorlandButton;
+  Prev := CreateStyleBtn('RAD Studio',    Ord(fsRADStudio),    Prev);
+  Prev := CreateStyleBtn('Object Pascal', Ord(fsObjectPascal), Prev);
+  Prev := CreateStyleBtn('K&&R',          Ord(fsKAndR),        Prev);
+          CreateStyleBtn('JCL/JVCL',      Ord(fsJclJvcl),      Prev);
+end;
+
+procedure TOptionsDlg.StyleButtonClick(Sender: TObject);
+var
+  OldSettings: TSettings;
+  OldCapFileName: array[0..MAX_PATH] of AnsiChar;
+begin
+  if (Formatter = nil) or not (Sender is TButton) then Exit;
+  SpacingCombo.Hide;
+  OldSettings := GetFormatterSettings(OldCapFileName);
+  case TFormatStyle(TButton(Sender).Tag) of
+    fsRADStudio:    Formatter.SetRADStudio;
+    fsObjectPascal: Formatter.SetObjectPascal;
+    fsKAndR:        Formatter.SetKAndR;
+    fsJclJvcl:      Formatter.SetJclJvcl;
+  end;
+  UpdateButtons;
+  SetFormatterSettings(OldSettings, OldCapFileName);
+  if PageControl1.ActivePage = TabSheet3 then
+    TabSheet3Show(nil);
 end;
 
 procedure TOptionsDlg.FeedAfterThenCheckClick(Sender: TObject);
