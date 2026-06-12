@@ -16,7 +16,15 @@ if errorlevel 1 goto :err_env
 
 if not exist "%ROOT%release" mkdir "%ROOT%release"
 if not exist "%ROOT%src\dcu" mkdir "%ROOT%src\dcu"
+if not exist "%ROOT%DelForDll\dcu" mkdir "%ROOT%DelForDll\dcu"
 
+rem ---- Step 1: build the formatter engine DLL (DelForDll.dll) ----
+cd /d "%ROOT%DelForDll"
+echo [Build] DelForDll.dpr ...
+dcc32 -B DelForDll.dpr -E"%ROOT%release" -N0.\dcu -U"%LIB%" -I"%LIB%" -NSSystem;Xml;Data;Datasnap;Web;Soap;Vcl;Winapi;System.Win;Data.Win -DRELEASE -Q -W- -H-
+if errorlevel 1 goto :err_build
+
+rem ---- Step 2: build the IDE expert DLL (DelForEx370.dll) ----
 rem .dpr uses relative unit paths, so compile from inside src
 cd /d "%ROOT%src"
 
@@ -25,7 +33,9 @@ dcc32 -B DelForEx.dpr -E"%ROOT%release" -N0.\dcu -U"%LIB%" -I"%LIB%" -NSSystem;X
 if errorlevel 1 goto :err_build
 
 echo.
-echo [OK] Output: %ROOT%release\DelForEx370.dll
+echo [OK] Output:
+echo       %ROOT%release\DelForDll.dll       (formatter engine)
+echo       %ROOT%release\DelForEx370.dll     (IDE plugin)
 endlocal
 exit /b 0
 
