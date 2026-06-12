@@ -148,7 +148,8 @@ begin
     P := StrEnd(Dest) - 1;
     while (P > Dest) and (P^ = ' ') do
       Dec(P);
-    if P^ <> ' ' then inc(P);
+    if P^ <> ' ' then
+      inc(P);
     P^ := #0;
   end;
   StrTrim := Dest;
@@ -305,7 +306,7 @@ begin
       RemoveDoubleBlankCheck.Checked := RemoveDoubleBlank;
       with SpaceGrid do
       begin
-        DefaultRowHeight:=32;
+        DefaultRowHeight := 32;
         RowCount := 10;
         Cells[0, 0] := '描述';
         Cells[1, 0] := '操作符';
@@ -448,7 +449,8 @@ begin
     FileEditDlg.LoadFile(CapFileNameEdit.Text);
     Screen.Cursor := Cur;
     FileEditDlg.ShowModal;
-    if FileEditDlg.IsChanged then Formatter.LoadCapFile(PAnsiChar(AnsiString(CapFileNameEdit.Text)));
+    if FileEditDlg.IsChanged then
+      Formatter.LoadCapFile(PAnsiChar(AnsiString(CapFileNameEdit.Text)));
   finally
     Screen.Cursor := Cur;
     FileEditDlg.Free;
@@ -535,7 +537,9 @@ begin
         SpacingCombo.SetBounds(Pnt.X, Pnt.Y, Right - Left, Bottom - Top);
         SpacingCombo.Show;
       end;
-    end else SpacingCombo.Hide;
+    end
+    else
+      SpacingCombo.Hide;
 end;
 
 procedure TOptionsDlg.SpaceGridTopLeftChanged(Sender: TObject);
@@ -570,3 +574,4 @@ begin
 end;
 
 end.
+

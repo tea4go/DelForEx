@@ -231,6 +231,11 @@ const
     (ReservedType: rtFuncDirective; Words: 'write'),
     (ReservedType: rtFuncDirective; Words: 'writeonly'),
     (ReservedType: rtOper; Words: 'xor')
+
+
+
+
+
     );
 
 implementation

@@ -185,7 +185,7 @@ procedure TPascalParser.SetDefault;
 begin
   CapFileName := nil; //PAnsiChar(AnsiString(RootDir) + 'CodeFormat.txt');
   WrapLines := False;
-  WrapPosition := 81;
+  WrapPosition := 401;
   AlignCommentPos := 40;
   AlignComments := False;
   AlignVarPos := 20;
@@ -519,3 +519,4 @@ begin
 end;
 
 end.
+
