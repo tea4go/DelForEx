@@ -190,10 +190,13 @@ var
   bReadOnly: Boolean;
 {$ENDIF}
 begin
+  OutputDebugString(PChar('[DelForEx] DoFormatFile enter, AFileName="' + AFileName +
+    '", ProgressDlg.Visible=' + BoolToStr(ProgressDlg.Visible, True)));
   if (ProgressDlg.Visible) then
   begin
 
     IDEStream := TIDEStream.Create(AFileName);
+    OutputDebugString(PChar('[DelForEx] IDEStream.FileName=' + IDEStream.FileName));
     try
 {$IFDEF Delphi6_UP}
       BeforeFormat(AFileName);
@@ -226,6 +229,8 @@ begin
         IDEStream.Lines.Clear;
 {$ELSE}
 {$IFDEF Delphi12_UP}
+        OutputDebugString(PChar('[DelForEx] IDEStream.Lines.Text length=' +
+          IntToStr(Length(IDEStream.Lines.Text))));
         P1 := PAnsiChar(AnsiString(IDEStream.Lines.Text));
 {$ELSE}
         P1 := IDEStream.GetText;
@@ -233,8 +238,10 @@ begin
         if P1 <> nil then
         begin
           LenP := StrLen(P1);
+          OutputDebugString(PChar('[DelForEx] P1 (AnsiString) length=' + IntToStr(LenP)));
           if LenP > $8FFF then
           begin
+            OutputDebugString('[DelForEx] branch: large (LoadFromFile via tmp)');
             AssignFile(Tmp, TmpFile);
             Rewrite(Tmp, 1);
             BlockWrite(Tmp, P1^, LenP);
@@ -243,12 +250,44 @@ begin
             Erase(Tmp);
           end
           else
-            Formatter.Text := P1; { GetTextStr is very slow for large strings }
-        end;
+          begin
+            OutputDebugString('[DelForEx] branch: small (Formatter.Text := P1) before');
+            try
+              Formatter.Text := P1; { GetTextStr is very slow for large strings }
+              OutputDebugString('[DelForEx] Formatter.Text := P1 done');
+            except
+              on E: Exception do
+                OutputDebugString(PChar('[DelForEx] EXCEPTION in SetText: ' +
+                  E.ClassName + ' / ' + E.Message));
+            end;
+          end;
+        end
+        else
+          OutputDebugString('[DelForEx] P1 is nil!');
 {$ENDIF}
         // Application.MessageBox('before parse', '');
-        if Formatter.Parse then
-          IDEStream.WriteText(Formatter.Text);
+        OutputDebugString('[DelForEx] before Formatter.Parse');
+        try
+          if Formatter.Parse then
+          begin
+            OutputDebugString(PChar('[DelForEx] Parse OK, Formatter.Text length=' +
+              IntToStr(StrLen(Formatter.Text))));
+            try
+              IDEStream.WriteText(Formatter.Text);
+              OutputDebugString('[DelForEx] WriteText returned');
+            except
+              on E: Exception do
+                OutputDebugString(PChar('[DelForEx] EXCEPTION in WriteText: ' +
+                  E.ClassName + ' / ' + E.Message));
+            end;
+          end
+          else
+            OutputDebugString('[DelForEx] Formatter.Parse returned FALSE');
+        except
+          on E: Exception do
+            OutputDebugString(PChar('[DelForEx] EXCEPTION in Parse: ' +
+              E.ClassName + ' / ' + E.Message));
+        end;
       end
       else
         ShowErrMsgBox(ExtractFileName(IDEStream.FileName) + ': �ļ�ֻ����δ���棡');

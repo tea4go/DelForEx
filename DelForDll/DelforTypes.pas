@@ -13,7 +13,16 @@
 }
 unit DelForTypes;
 interface
+
 uses SysUtils, OObjects;
+
+// 引擎是 8-bit 字符解析器，强制 PChar = PAnsiChar，避免 Delphi 2009+ 默认 PWideChar
+// 与外部 PAnsiChar 接口错配导致 AV。SysUtils 在 D2009+ 仍提供 StrLen/StrCopy 等
+// 的 PAnsiChar 重载，因此无需再引入 AnsiStrings。
+{$IFDEF UNICODE}
+type
+  PChar = PAnsiChar;
+{$ENDIF}
 
 const
   CurrentDllVersion = 1;
@@ -69,7 +78,7 @@ type
   TFillMode = (fmUnchanged, fmAddNewWord, fmUse, fmExceptDirect, fmAddUse,
     fmAddUseExcept);
 
-  TCommentArray = array[0..20] of Char; {easier to save}
+  TCommentArray = array[0..20] of AnsiChar; {easier to save}
 
   PSettings = ^TSettings;
   TSettings = packed record
@@ -261,7 +270,7 @@ begin
         Result := StrLower(Source);
         while Source^ in [' ', Tab] do
           inc(Source);
-        Source^ := UpCase(Char(Source^));
+        Source^ := AnsiChar(UpCase(Char(Source^)));
       end;
   else
     Result := Source;

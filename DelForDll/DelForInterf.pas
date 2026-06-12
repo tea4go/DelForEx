@@ -3,6 +3,12 @@
 interface
 uses Classes, DelForTypes;
 
+// 见 DelForTypes：引擎按 8-bit 处理，PChar 已重定义为 PAnsiChar
+{$IFDEF UNICODE}
+type
+  PChar = PAnsiChar;
+{$ENDIF}
+
 procedure Formatter_Destroy;
 procedure Formatter_Create;
 procedure Formatter_LoadFromFile(AFileName: PChar; ASettings: PSettings;

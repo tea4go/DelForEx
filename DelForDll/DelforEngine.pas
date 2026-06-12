@@ -2,6 +2,14 @@
 interface
 uses SysUtils, OObjects, Classes, DelForTypes;
 
+// 见 DelForTypes：引擎按 8-bit 处理，PChar 已重定义为 PAnsiChar。
+// 不直接 uses AnsiStrings，否则 StrCopy/StrCat/StrPos 等会与 SysUtils 同名重载歧义。
+// 仅对默认走 PWideChar 的 StrAlloc/StrECopy 用作用域限定调用 SysUtils.xxx。
+{$IFDEF UNICODE}
+type
+  PChar = PAnsiChar;
+{$ENDIF}
+
 (*
 WISHLIST:
 - suppress read-only file message
@@ -36,7 +44,7 @@ type
     procedure SetSpace(SpaceBefore: TSpaceBefore; State: Boolean); virtual;
     procedure SetReservedType(AReservedType: TReservedType); virtual;
     function GetEString(Dest: PChar): PChar; virtual; abstract;
-    function ChangeComment(commchar: char): boolean;
+    function ChangeComment(commchar: AnsiChar): boolean;
     property Expression: PChar read GetExpression write SetExpression;
     property ExpressionCase: TCase read GetCase write SetCase;
   end;
@@ -263,7 +271,7 @@ end;
 
 procedure TDelforParser.Add(Buff: PChar);
 var
-  AWord: array[0..Maxline] of Char;
+  AWord: array[0..Maxline] of AnsiChar;
 begin
   PrevLine := TLineFeed.Create(0); {New(TLineFeed, Create(-1));}
   FileText.Add(PrevLine);
@@ -294,7 +302,7 @@ end;
 procedure TDelforParser.LoadFromFile(AFileName: PChar);
 var
   InFile: TextFile;
-  Buff: array[0..Maxline] of Char;
+  Buff: array[0..Maxline] of AnsiChar;
 begin
   if Assigned(OnProgress) then
     OnProgress(Self, 0);
@@ -322,7 +330,7 @@ end;
 
 procedure TDelforParser.LoadFromList(AList: TStringList);
 var
-  Buff: array[0..Maxline] of Char;
+  Buff: array[0..Maxline] of AnsiChar;
   I, k: Integer;
 begin
   if Assigned(OnProgress) then
@@ -772,7 +780,7 @@ var
     rtype: TReservedType;
     wType: TWordType;
     k: Integer;
-    S: array[0..Maxline] of Char;
+    S: array[0..Maxline] of AnsiChar;
     Found: Boolean;
   begin
     if PascalWord <> nil then
@@ -1097,7 +1105,7 @@ var
     var
       PasWord: TPascalWord;
       PrevPasWord: TPascalWord;
-      Buff: array[0..200] of Char;
+      Buff: array[0..200] of AnsiChar;
     begin
       prev := GetWord(I - 1);
       if (prev <> nil) and (prev.ReservedType = rtComment)
@@ -2027,7 +2035,7 @@ procedure TDelforParser.WriteToFile(AFileName: PChar);
 var
   outFile: TextFile;
   I: Integer;
-  A: array[0..Maxline] of Char;
+  A: array[0..Maxline] of AnsiChar;
 begin
   Assign(outFile, AFileName);
   try
@@ -2072,15 +2080,39 @@ end;
 function TDelforParser.GetTextStr: PChar;
 const
   Increment = $FFFF;
+
+  // 本地辅助：避开 D12+ 标识符歧义/PWideChar 默认问题
+  function AnsiAlloc(Size: Integer): PAnsiChar;
+  begin
+    GetMem(Result, Size + 1);
+    Result[0] := #0;
+  end;
+
+  procedure AnsiDispose(P: PAnsiChar);
+  begin
+    if P <> nil then
+      FreeMem(P);
+  end;
+
+  function AnsiECopy(Dest, Source: PAnsiChar): PAnsiChar;
+  var
+    Len: Integer;
+  begin
+    Len := StrLen(Source);
+    Move(Source^, Dest^, Len);
+    Result := Dest + Len;
+    Result^ := #0;
+  end;
+
 var
   CurSize, CurCap: Integer;
-  Buff: array[0..Maxline] of Char;
+  Buff: array[0..Maxline] of AnsiChar;
   P, P2, Pres: PChar;
   I: Integer;
 begin
   CurCap := Increment;
-  StrDispose(FCurrentText);
-  Pres := StrAlloc(CurCap + 10);
+  AnsiDispose(FCurrentText);
+  Pres := AnsiAlloc(CurCap + 10);
   P := Pres;
   P^ := #0;
   I := 0;
@@ -2094,12 +2126,12 @@ begin
       begin
         inc(CurCap, Increment);
         P2 := Pres;
-        Pres := StrAlloc(CurCap + 10);
-        P := strECopy(Pres, P2);
-        StrDispose(P2);
+        Pres := AnsiAlloc(CurCap + 10);
+        P := AnsiECopy(Pres, P2);
+        AnsiDispose(P2);
       end;
-      P := strECopy(P, Buff);
-      P := strECopy(P, CRLF);
+      P := AnsiECopy(P, Buff);
+      P := AnsiECopy(P, CRLF);
       if (I mod 50 = 0) and Assigned(OnProgress) then
         OnProgress(Self, 66 + I * 34 div Count);
     end;
@@ -2110,7 +2142,9 @@ end;
 destructor TDelforParser.Destroy;
 begin
   inherited Destroy;
-  StrDispose(FCurrentText);
+  // FCurrentText 由 GetTextStr 中的 AnsiAlloc(GetMem) 分配，必须用 FreeMem 释放
+  if FCurrentText <> nil then
+    FreeMem(FCurrentText);
   FileText.Free;
 end;
 
@@ -2179,7 +2213,7 @@ procedure TExpression.CheckReserved;
 var
   L, H, C, I: Integer;
   P: PChar;
-  Buf: array[0..Maxline] of Char;
+  Buf: array[0..Maxline] of AnsiChar;
 begin
   SetReservedType(rtNothing);
   case WordType of
@@ -2471,7 +2505,7 @@ end;
 procedure TDelforParser.LoadCapFile(ACapFile: PChar);
 var
   InFile: TextFile;
-  S: array[0..400] of Char;
+  S: array[0..400] of AnsiChar;
   I: Integer;
 begin
   if CapNames <> nil then
@@ -2516,9 +2550,9 @@ begin
   end;
 end;
 
-function TPascalWord.ChangeComment(commchar: char): boolean;
+function TPascalWord.ChangeComment(commchar: AnsiChar): boolean;
 var
-  Buff, buff1: array[0..Maxline] of Char;
+  Buff, buff1: array[0..Maxline] of AnsiChar;
 begin
   Result := False;
   if ReservedType = rtComment then

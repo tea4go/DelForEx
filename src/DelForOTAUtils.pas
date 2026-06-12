@@ -261,12 +261,17 @@ var
   CharPos: TOTACharPos;
   EditPos: TOTAEditPos;
 begin
+  OutputDebugString(PChar('[DelForEx] OtaSetAsActiveEditorText enter, Text length=' +
+    IntToStr(Length(Text))));
   EditView := OtaGetTopMostEditView(OtaGetCurrentSourceEditor);
   Assert(Assigned(EditView), 'No edit view found');
   EditPos := EditView.CursorPos;
   EditView.ConvertPos(True, EditPos, CharPos);
+  OutputDebugString('[DelForEx] before DeleteTextFromPos');
   OtaDeleteTextFromPos(0, MaxInt, OtaGetCurrentSourceEditor);
+  OutputDebugString('[DelForEx] before InsertTextIntoEditorAtPos');
   OtaInsertTextIntoEditorAtPos(Text, 0, OtaGetCurrentSourceEditor);
+  OutputDebugString('[DelForEx] after InsertTextIntoEditorAtPos');
   EditView.CursorPos := EditPos;
   EditView.MoveViewToCursor;
   EditView.Paint;
