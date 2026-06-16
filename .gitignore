@@ -9,3 +9,4 @@ __history
 *.dll
 bin/*
 _encoding_backup_20260606/
+.claude/
