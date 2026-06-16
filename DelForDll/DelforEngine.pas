@@ -1550,68 +1550,79 @@ var
               end
               else
                 functdeclare := False;
-              NoBlankLine := False;
-              if not functdeclare then
+              { 匿名方法检测：前一个有效 token 是逗号、左括号或赋值符 :=
+                表示 procedure/function 用作表达式而非声明 }
+              if (Prev1 <> nil) and (Prev1.ReservedType in
+                [rtComma, rtLeftBr, rtEqualOper]) then
               begin
-                k := 0;
-                repeat
-                  inc(k);
-                  next := GetWord(I + k);
-                  if (next <> nil) and (next.ReservedType = rtLeftBr) then
-                    repeat
-                      inc(k);
-                      next := GetWord(I + k);
-                    until (next = nil) or (next.ReservedType = rtRightBr);
-                until (next = nil) or (next.ReservedType = rtSemiColon);
-                if next <> nil then
-                begin
-                  repeat
-                    inc(k);
-                    next := GetWord(I + k);
-                  until (next = nil) or not (next.ReservedType in
-                    [rtLineFeed,                     rtComment]);
-                  if (next <> nil) and (next.ReservedType = rtForward) then
-                    NoBlankLine := True;
-                end;
-              end;
-              if not (functdeclare or interfacePart or
-                (GetStackTop = rtClass)) then
-              begin
-                if not HasType(rtProcedure) then
-                begin
-                  if (nIndent > 0) then
-                  begin
-                    nIndent := 0;
-                    SetPrevIndent;
-                  end;
-                  ProcLevel := 0;
-                  if BlankProc and not NoBlankLine then
-                    CheckBlankProc;
-                  if CommentFunction then
-                    PutCommentBefore('{ procedure }');
-                end
-                else
-                begin
-                  if BlankSubProc and not NoBlankLine then
-                    CheckBlankProc;
-                  inc(ProcLevel);
-                  if nIndent = 0 then
-                  begin
-                    SetPrevIndent;
-                    inc(nIndent);
-                  end;
-                end;
-                {if indentProcedure then  inc(nIndent);}
+                { 匿名方法：保持当前缩进，push rtProcedure 让 begin/end 配对 }
                 Push(rtProcedure, nIndent, 0);
               end
               else
               begin
-                if (not functdeclare) and (not (GetStackTop = rtClass)) then
+                NoBlankLine := False;
+                if not functdeclare then
                 begin
-                  nIndent := 0;
-                  SetPrevIndent;
+                  k := 0;
+                  repeat
+                    inc(k);
+                    next := GetWord(I + k);
+                    if (next <> nil) and (next.ReservedType = rtLeftBr) then
+                      repeat
+                        inc(k);
+                        next := GetWord(I + k);
+                      until (next = nil) or (next.ReservedType = rtRightBr);
+                  until (next = nil) or (next.ReservedType = rtSemiColon);
+                  if next <> nil then
+                  begin
+                    repeat
+                      inc(k);
+                      next := GetWord(I + k);
+                    until (next = nil) or not (next.ReservedType in
+                      [rtLineFeed,                     rtComment]);
+                    if (next <> nil) and (next.ReservedType = rtForward) then
+                      NoBlankLine := True;
+                  end;
                 end;
-                Push(rtProcDeclare, nIndent, 0);
+                if not (functdeclare or interfacePart or
+                  (GetStackTop = rtClass)) then
+                begin
+                  if not HasType(rtProcedure) then
+                  begin
+                    if (nIndent > 0) then
+                    begin
+                      nIndent := 0;
+                      SetPrevIndent;
+                    end;
+                    ProcLevel := 0;
+                    if BlankProc and not NoBlankLine then
+                      CheckBlankProc;
+                    if CommentFunction then
+                      PutCommentBefore('{ procedure }');
+                  end
+                  else
+                  begin
+                    if BlankSubProc and not NoBlankLine then
+                      CheckBlankProc;
+                    inc(ProcLevel);
+                    if nIndent = 0 then
+                    begin
+                      SetPrevIndent;
+                      inc(nIndent);
+                    end;
+                  end;
+                  {if indentProcedure then  inc(nIndent);}
+                  Push(rtProcedure, nIndent, 0);
+                end
+                else
+                begin
+                  if (not functdeclare) and (not (GetStackTop = rtClass)) then
+                  begin
+                    nIndent := 0;
+                    SetPrevIndent;
+                  end;
+                  Push(rtProcDeclare, nIndent, 0);
+                end;
               end;
             end;
           rtInterface:
