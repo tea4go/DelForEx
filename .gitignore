@@ -10,3 +10,4 @@ __history
 bin/*
 _encoding_backup_20260606/
 .claude/
+src/DelForBuild.inc

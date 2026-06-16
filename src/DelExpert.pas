@@ -97,6 +97,8 @@ uses DelForCommon, DelForTypes, MyIDEStream, Progr, OptDlg
 
 {$R *.DFM}
 
+{$I DelForVer.inc}
+
 function ShowErrMsgBox(const S: string): Integer;
 begin
   if Assigned(ProgressDlg) then
@@ -363,6 +365,8 @@ begin
 {$ENDIF}
   AllButton.Enabled := ProjectOpened;
   WholeProjBtn.Enabled := ProjectOpened;
+  { 在标题栏显示版本号与编译时间,便于确认加载的是最新 DLL }
+  Caption := '源码格式化  -  版本 ' + DelForVersionStr;
 end;
 
 procedure TDelExpertDlg.FormClose(Sender: TObject; var Action: TCloseAction);
