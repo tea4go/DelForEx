@@ -11,3 +11,5 @@ bin/*
 _encoding_backup_20260606/
 .claude/
 src/DelForBuild.inc
+src/DelForVerInfo.rc
+src/DelForVerInfo.res

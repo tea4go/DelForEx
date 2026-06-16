@@ -36,6 +36,39 @@ set BUILDTS=%BUILDTS:~0,19%
 echo   DelForBuildStr = '%BUILDTS%';> "%ROOT%src\DelForBuild.inc"
 echo [Build] timestamp: %BUILDTS%
 
+rem ---- 生成版本资源 DelForVerInfo.res(文件属性可见;主版本 2.5) ----
+rem .rc 内容由本脚本生成,brcc32 编译;FILEVERSION 数字部分固定,
+rem 可读 build 时间放在 ProductVersion/Comments 字段。
+set VERRC=%ROOT%src\DelForVerInfo.rc
+echo 1 VERSIONINFO> "%VERRC%"
+rem 用括号包裹避免行尾数字 0 被 cmd 误判为 stream-0 重定向(0>>)
+(echo  FILEVERSION 2,5,0,0)>> "%VERRC%"
+(echo  PRODUCTVERSION 2,5,0,0)>> "%VERRC%"
+echo  FILEOS 0x40004L>> "%VERRC%"
+echo  FILETYPE 0x2L>> "%VERRC%"
+echo BEGIN>> "%VERRC%"
+echo   BLOCK "StringFileInfo">> "%VERRC%"
+echo   BEGIN>> "%VERRC%"
+echo     BLOCK "080404B0">> "%VERRC%"
+echo     BEGIN>> "%VERRC%"
+echo       VALUE "CompanyName", "DelForEx">> "%VERRC%"
+rem 注意:FileDescription 值末尾的空格是有意保留——brcc32 5.40 对某些
+rem 字节对齐的字符串有缺陷,会把后续 key 名渗入该字段;加空格改变对齐可规避。
+echo       VALUE "FileDescription", "DelForEx Pascal Code Formatter ">> "%VERRC%"
+echo       VALUE "FileVersion", "2.5">> "%VERRC%"
+echo       VALUE "ProductName", "DelForEx">> "%VERRC%"
+echo       VALUE "ProductVersion", "2.5 (build %BUILDTS%)">> "%VERRC%"
+echo       VALUE "Comments", "build %BUILDTS%">> "%VERRC%"
+echo     END>> "%VERRC%"
+echo   END>> "%VERRC%"
+echo   BLOCK "VarFileInfo">> "%VERRC%"
+echo   BEGIN>> "%VERRC%"
+(echo     VALUE "Translation", 0x0804, 0x04B0)>> "%VERRC%"
+echo   END>> "%VERRC%"
+echo END>> "%VERRC%"
+"%BDS%\bin\brcc32.exe" -fo"%ROOT%src\DelForVerInfo.res" "%VERRC%" >nul
+if errorlevel 1 goto :err_build
+
 rem ---- Step 1: build the formatter engine DLL (DelForDll.dll) ----
 cd /d "%ROOT%DelForDll"
 echo [Build] DelForDll.dpr ...

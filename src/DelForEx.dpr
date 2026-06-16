@@ -20,6 +20,12 @@ uses
   EditFile in 'EditFile.pas' {FileEditDlg},
   progr in 'progr.pas' {ProgressDlg};
 
+{ 文件版本信息:仅 build.bat 编译时(定义 DELFOR_HASBUILD)引入,
+  资源由 build.bat 用 brcc32 生成。IDE 内直接编译不需要此资源。}
+{$IFDEF DELFOR_HASBUILD}
+{$R DelForVerInfo.res}
+{$ENDIF}
+
 begin
 end.
 
