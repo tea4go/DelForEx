@@ -1555,8 +1555,10 @@ var
               if (Prev1 <> nil) and (Prev1.ReservedType in
                 [rtComma, rtLeftBr, rtEqualOper]) then
               begin
-                { 匿名方法：保持当前缩进，push rtProcedure 让 begin/end 配对 }
-                Push(rtProcedure, nIndent, 0);
+                { 匿名方法：保持当前缩进。Push 用增量 1，使方法体(var/begin
+                  内容)比 procedure 行深一级,而 nInd 仍为当前层,让 var/begin
+                  关键字行经 DecPrevIndent 后与 procedure 对齐。}
+                Push(rtProcedure, nIndent, 1);
               end
               else
               begin
