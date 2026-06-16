@@ -12,7 +12,7 @@ rem                         复制到已安装的插件目录(见 INSTALLDIR)
 rem ============================================================
 setlocal
 
-set BDS=D:\DevDisk\DelphiDisk\DelphiXE13.1
+set BDS=C:\DevDisk\DelphiDisk\DelphiXE13.1
 set LIB=%BDS%\lib\win32\release
 set ROOT=%~dp0
 rem 已安装的 IDE 插件目录(注册表 HKCU\...\37.0\Experts\DelForEx 实际指向此处)
